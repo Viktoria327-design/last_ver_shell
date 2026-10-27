@@ -1,0 +1,65 @@
+[debug] Параметры запуска:
+[debug]   --vfs      = /home/claude/shell-emulator/vfs/deep.zip
+[debug]   --script   = /home/claude/shell-emulator/scripts/stage5_mv.emu
+[debug]   --headless = True
+[debug]   пользователь ОС = root, хост = vm
+[debug]   заголовок окна  = Эмулятор - [root@vm]
+[debug]   VFS загружена в память из ZIP-архива
+root@vm:/$ # Этап 5: mv (изменения только в памяти). Рекомендуется: --vfs vfs/deep.zip
+root@vm:/$ cd /home/user/docs
+root@vm:/home/user/docs$ ls
+archive  report.txt
+root@vm:/home/user/docs$ # --- переименование файла ---
+root@vm:/home/user/docs$ mv report.txt report_old.txt
+root@vm:/home/user/docs$ ls
+archive  report_old.txt
+root@vm:/home/user/docs$ # --- перемещение в каталог, режим -v ---
+root@vm:/home/user/docs$ mv -v report_old.txt archive
+renamed 'report_old.txt' -> 'archive/report_old.txt'
+root@vm:/home/user/docs$ ls archive
+2024  report_old.txt
+root@vm:/home/user/docs$ # --- перемещение нескольких файлов в каталог ---
+root@vm:/home/user/docs$ mv archive/2024/q1.txt archive/2024/q2.txt /tmp
+root@vm:/home/user/docs$ ls /tmp
+q1.txt  q2.txt
+root@vm:/home/user/docs$ ls archive/2024
+final
+root@vm:/home/user/docs$ # --- перемещение каталога; текущий каталог следует за перемещением ---
+root@vm:/home/user/docs$ cd archive/2024/final
+root@vm:/home/user/docs/archive/2024/final$ mv /home/user/docs/archive/2024 /tmp/2024_moved
+root@vm:/tmp/2024_moved/final$ cat summary.txt
+Summary (5 levels deep)
+root@vm:/tmp/2024_moved/final$ ls /tmp
+2024_moved  q1.txt  q2.txt
+root@vm:/tmp/2024_moved/final$ # --- перезапись существующего файла и режим -n (не перезаписывать) ---
+root@vm:/tmp/2024_moved/final$ mv /etc/hostname /etc/motd
+root@vm:/tmp/2024_moved/final$ cat /etc/motd
+vfs-host
+root@vm:/tmp/2024_moved/final$ mv -n /var/log/system.log /etc/motd
+root@vm:/tmp/2024_moved/final$ cat /etc/motd
+vfs-host
+root@vm:/tmp/2024_moved/final$ cd /
+root@vm:/$ # --- ошибки ---
+root@vm:/$ mv
+mv: missing file operand
+root@vm:/$ mv /etc
+mv: missing destination file operand after '/etc'
+root@vm:/$ mv /нет/такого /tmp
+mv: cannot stat '/нет/такого': No such file or directory
+root@vm:/$ mv /var/log/system.log /нет/каталога/файл
+mv: cannot move '/var/log/system.log' to '/нет/каталога/файл': No such file or directory
+root@vm:/$ mv /var/log/system.log /var/log/system.log
+mv: '/var/log/system.log' and '/var/log/system.log' are the same file
+root@vm:/$ mv /tmp /tmp/2024_moved/inside
+mv: cannot move '/tmp' to a subdirectory of itself, '/tmp/2024_moved/inside'
+root@vm:/$ mv / /tmp
+mv: cannot move '/' to '/tmp': Device or resource busy
+root@vm:/$ mv /etc /tmp/2024_moved/final/summary.txt
+mv: cannot overwrite non-directory '/tmp/2024_moved/final/summary.txt' with directory '/etc'
+root@vm:/$ mv /var /home/user/pictures/logo.png/x
+mv: cannot move '/var' to '/home/user/pictures/logo.png/x': Not a directory
+root@vm:/$ mv -v /var/log/system.log /etc /tmp/2024_moved/final/summary.txt
+mv: target '/tmp/2024_moved/final/summary.txt': Not a directory
+root@vm:/$ mv -q a b
+mv: invalid option -- 'q'
+root@vm:/$ 

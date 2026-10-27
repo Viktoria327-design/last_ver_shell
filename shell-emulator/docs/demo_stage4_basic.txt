@@ -1,0 +1,95 @@
+[debug] Параметры запуска:
+[debug]   --vfs      = /home/claude/shell-emulator/vfs/deep.zip
+[debug]   --script   = /home/claude/shell-emulator/scripts/stage4_basic.emu
+[debug]   --headless = True
+[debug]   пользователь ОС = root, хост = vm
+[debug]   заголовок окна  = Эмулятор - [root@vm]
+[debug]   VFS загружена в память из ZIP-архива
+root@vm:/$ # Этап 4: ls, cd, whoami, cat. Рекомендуется: --vfs vfs/deep.zip
+root@vm:/$ # --- whoami ---
+root@vm:/$ whoami
+root
+root@vm:/$ whoami лишний_аргумент
+whoami: extra operand 'лишний_аргумент'
+root@vm:/$ # --- ls: без аргументов, с путём, несколько путей, -l, -a ---
+root@vm:/$ ls
+etc  home  tmp  var
+root@vm:/$ ls /home/user
+docs  pictures
+root@vm:/$ ls -a /home/user
+.  ..  .config  docs  pictures
+root@vm:/$ ls -l /home/user/docs
+drwxr-xr-x  0 archive
+-rw-r--r-- 17 report.txt
+root@vm:/$ ls -la /home/user/docs/archive
+drwxr-xr-x 0 .
+drwxr-xr-x 0 ..
+drwxr-xr-x 0 2024
+root@vm:/$ ls /etc /var /tmp
+/etc:
+hostname  motd
+
+/tmp:
+
+/var:
+log
+root@vm:/$ ls /etc/motd /var
+/etc/motd
+
+/var:
+log
+root@vm:/$ ls -z
+ls: invalid option -- 'z'
+root@vm:/$ ls /нет/такого
+ls: cannot access '/нет/такого': No such file or directory
+root@vm:/$ ls /etc/motd/файл
+ls: cannot access '/etc/motd/файл': Not a directory
+root@vm:/$ # --- cd: абсолютный, относительный, .., без аргумента, ошибки ---
+root@vm:/$ cd /home/user/docs
+root@vm:/home/user/docs$ cd archive/2024
+root@vm:/home/user/docs/archive/2024$ cd ../../..
+root@vm:/home/user$ cd /etc/motd
+cd: /etc/motd: Not a directory
+root@vm:/home/user$ cd /нет/такого
+cd: /нет/такого: No such file or directory
+root@vm:/home/user$ cd a b
+cd: too many arguments
+root@vm:/home/user$ cd
+root@vm:/$ cd ~
+root@vm:/$ cd /home/user/pictures
+root@vm:/home/user/pictures$ # --- cat: файл, несколько, -n, пустой, каталог, двоичный, ошибки ---
+root@vm:/home/user/pictures$ cat /etc/motd
+Welcome to the virtual file system!
+root@vm:/home/user/pictures$ cat -n /var/log/system.log
+     1	boot ok
+     2	service started
+root@vm:/home/user/pictures$ cat /etc/hostname /etc/motd
+vfs-host
+Welcome to the virtual file system!
+root@vm:/home/user/pictures$ cat logo.png
+cat: logo.png: двоичный файл, содержимое показано в base64
+iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmM
+IQAAAABJRU5ErkJggg==
+root@vm:/home/user/pictures$ cat /home
+cat: /home: Is a directory
+root@vm:/home/user/pictures$ cat /нет/такого
+cat: /нет/такого: No such file or directory
+root@vm:/home/user/pictures$ cat
+cat: missing file operand
+root@vm:/home/user/pictures$ cat /etc/hostname /нет/такого /etc/motd
+vfs-host
+cat: /нет/такого: No such file or directory
+Welcome to the virtual file system!
+root@vm:/home/user/pictures$ # --- парсер: кавычки и экранирование ---
+root@vm:/home/user/pictures$ cd "/home/user/docs"
+root@vm:/home/user/docs$ cat "report.txt"
+Quarterly report
+root@vm:/home/user/docs$ cat 'report.txt'
+Quarterly report
+root@vm:/home/user/docs$ cat re\port.txt
+Quarterly report
+root@vm:/home/user/docs$ cat "report.txt
+emulator: неожиданный конец ввода: не закрыта кавычка "
+root@vm:/home/user/docs$ cd ""
+cd: : No such file or directory
+root@vm:/home/user/docs$ 

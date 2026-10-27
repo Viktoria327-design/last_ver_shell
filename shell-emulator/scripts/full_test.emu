@@ -1,0 +1,34 @@
+# Полный тест всех команд и режимов (этапы 1–5). Рекомендуется: --vfs vfs/deep.zip
+# ===== Этап 1: REPL, парсер, заглушки/ошибки =====
+foo bar
+ls "/home/user"
+ls '/home/user' "/etc"
+cat "незакрытая
+cat \
+cd ""
+# ===== Этап 3/4: VFS, ls, cd, whoami, cat =====
+whoami
+ls
+ls -la /home/user
+cd /home/user/docs/archive/2024
+ls
+cat q1.txt q2.txt
+cat -n final/summary.txt
+cd ../../../pictures
+cat logo.png
+cd /home/user/.config
+cat settings.ini
+cd /нет/такого
+cat /home
+ls /нет/такого
+# ===== Этап 5: mv =====
+cd /
+mv -v /home/user/docs/report.txt /tmp
+ls /tmp
+mv /tmp/report.txt /tmp/report_renamed.txt
+mv /tmp/report_renamed.txt /etc /var
+ls /var
+mv /нет/такого /tmp
+mv
+# ===== Выход =====
+exit 3

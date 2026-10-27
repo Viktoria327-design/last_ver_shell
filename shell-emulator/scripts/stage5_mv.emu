@@ -1,0 +1,36 @@
+# Этап 5: mv (изменения только в памяти). Рекомендуется: --vfs vfs/deep.zip
+cd /home/user/docs
+ls
+# --- переименование файла ---
+mv report.txt report_old.txt
+ls
+# --- перемещение в каталог, режим -v ---
+mv -v report_old.txt archive
+ls archive
+# --- перемещение нескольких файлов в каталог ---
+mv archive/2024/q1.txt archive/2024/q2.txt /tmp
+ls /tmp
+ls archive/2024
+# --- перемещение каталога; текущий каталог следует за перемещением ---
+cd archive/2024/final
+mv /home/user/docs/archive/2024 /tmp/2024_moved
+cat summary.txt
+ls /tmp
+# --- перезапись существующего файла и режим -n (не перезаписывать) ---
+mv /etc/hostname /etc/motd
+cat /etc/motd
+mv -n /var/log/system.log /etc/motd
+cat /etc/motd
+cd /
+# --- ошибки ---
+mv
+mv /etc
+mv /нет/такого /tmp
+mv /var/log/system.log /нет/каталога/файл
+mv /var/log/system.log /var/log/system.log
+mv /tmp /tmp/2024_moved/inside
+mv / /tmp
+mv /etc /tmp/2024_moved/final/summary.txt
+mv /var /home/user/pictures/logo.png/x
+mv -v /var/log/system.log /etc /tmp/2024_moved/final/summary.txt
+mv -q a b

@@ -1,0 +1,8 @@
+# Стартовый скрипт этапа 2. Ошибочные строки пропускаются, выполнение идёт дальше.
+# Запуск: python main.py --script scripts/stage2_config.emu
+whoami
+ls
+echo hello
+cd /nonexistent
+ls "незакрытая кавычка
+whoami

@@ -1,0 +1,112 @@
+== 1. Без параметров (интерактивный ввод из stdin) ==
+
+$ python3 main.py --headless
+[debug] Параметры запуска:
+[debug]   --vfs      = (не задан — пустая VFS)
+[debug]   --script   = (не задан)
+[debug]   --headless = True
+[debug]   пользователь ОС = root, хост = vm
+[debug]   заголовок окна  = Эмулятор - [root@vm]
+root@vm:/$ whoami
+root
+root@vm:/$ exit
+[код возврата: 0]
+== 2. Только --vfs ==
+
+$ python3 main.py --headless --vfs vfs/minimal.zip
+[debug] Параметры запуска:
+[debug]   --vfs      = /home/claude/shell-emulator/vfs/minimal.zip
+[debug]   --script   = (не задан)
+[debug]   --headless = True
+[debug]   пользователь ОС = root, хост = vm
+[debug]   заголовок окна  = Эмулятор - [root@vm]
+[debug]   VFS загружена в память из ZIP-архива
+root@vm:/$ exit
+[код возврата: 0]
+== 3. Только --script ==
+
+$ python3 main.py --headless --script scripts/stage2_config.emu
+[debug] Параметры запуска:
+[debug]   --vfs      = (не задан — пустая VFS)
+[debug]   --script   = /home/claude/shell-emulator/scripts/stage2_config.emu
+[debug]   --headless = True
+[debug]   пользователь ОС = root, хост = vm
+[debug]   заголовок окна  = Эмулятор - [root@vm]
+root@vm:/$ # Стартовый скрипт этапа 2. Ошибочные строки пропускаются, выполнение идёт дальше.
+root@vm:/$ # Запуск: python main.py --script scripts/stage2_config.emu
+root@vm:/$ whoami
+root
+root@vm:/$ ls
+root@vm:/$ echo hello
+echo: command not found
+root@vm:/$ cd /nonexistent
+cd: /nonexistent: No such file or directory
+root@vm:/$ ls "незакрытая кавычка
+emulator: неожиданный конец ввода: не закрыта кавычка "
+root@vm:/$ whoami
+root
+root@vm:/$ 
+[код возврата: 0]
+== 4. --vfs и --script вместе ==
+
+$ python3 main.py --headless --vfs vfs/files.zip --script scripts/stage3_vfs.emu
+[debug] Параметры запуска:
+[debug]   --vfs      = /home/claude/shell-emulator/vfs/files.zip
+[debug]   --script   = /home/claude/shell-emulator/scripts/stage3_vfs.emu
+[debug]   --headless = True
+[debug]   пользователь ОС = root, хост = vm
+[debug]   заголовок окна  = Эмулятор - [root@vm]
+[debug]   VFS загружена в память из ZIP-архива
+root@vm:/$ # Этап 3: работа с VFS. Рекомендуется: --vfs vfs/deep.zip
+root@vm:/$ ls
+data.csv  empty.txt  hello.txt  my file.txt  notes.txt  todo.md
+root@vm:/$ ls /
+data.csv  empty.txt  hello.txt  my file.txt  notes.txt  todo.md
+root@vm:/$ ls /home/user/docs/archive/2024/final
+ls: cannot access '/home/user/docs/archive/2024/final': No such file or directory
+root@vm:/$ ls /нет/такого/пути
+ls: cannot access '/нет/такого/пути': No such file or directory
+root@vm:/$ cd /home/user/docs/archive/2024
+cd: /home/user/docs/archive/2024: No such file or directory
+root@vm:/$ ls
+data.csv  empty.txt  hello.txt  my file.txt  notes.txt  todo.md
+root@vm:/$ cd ..
+root@vm:/$ ls
+data.csv  empty.txt  hello.txt  my file.txt  notes.txt  todo.md
+root@vm:/$ cd /etc
+cd: /etc: No such file or directory
+root@vm:/$ ls
+data.csv  empty.txt  hello.txt  my file.txt  notes.txt  todo.md
+root@vm:/$ exit
+[код возврата: 0]
+== 5. Несуществующий скрипт (ошибка) ==
+
+$ python3 main.py --headless --script scripts/no_such.emu
+emulator: не удалось прочитать скрипт 'scripts/no_such.emu': No such file or directory
+[код возврата: 1]
+== 6. Несуществующая VFS (ошибка) ==
+
+$ python3 main.py --headless --vfs vfs/no_such.zip
+emulator: ошибка загрузки VFS: файл не найден: 'vfs/no_such.zip'
+[код возврата: 1]
+== 7. Неизвестный параметр ==
+
+$ python3 main.py --bogus
+usage: emulator [-h] [--vfs PATH] [--script PATH] [--headless]
+emulator: error: unrecognized arguments: --bogus
+[код возврата: 2]
+== 8. Справка ==
+
+$ python3 main.py --help
+usage: emulator [-h] [--vfs PATH] [--script PATH] [--headless]
+
+Эмулятор оболочки UNIX-подобной ОС (GUI) с виртуальной ФС из ZIP-архива.
+
+options:
+  -h, --help     show this help message and exit
+  --vfs PATH     путь к ZIP-архиву с VFS (по умолчанию — пустая ФС)
+  --script PATH  путь к стартовому скрипту с командами эмулятора
+  --headless     консольный режим без окна (для автоматических тестов)
+[код возврата: 0]
+
+GUI-режим (откроет окно): python3 main.py --vfs vfs/deep.zip --script scripts/full_test.emu

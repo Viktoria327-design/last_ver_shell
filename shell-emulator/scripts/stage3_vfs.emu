@@ -1,0 +1,12 @@
+# Этап 3: работа с VFS. Рекомендуется: --vfs vfs/deep.zip
+ls
+ls /
+ls /home/user/docs/archive/2024/final
+ls /нет/такого/пути
+cd /home/user/docs/archive/2024
+ls
+cd ..
+ls
+cd /etc
+ls
+exit

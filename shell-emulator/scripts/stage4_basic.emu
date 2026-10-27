@@ -1,0 +1,41 @@
+# Этап 4: ls, cd, whoami, cat. Рекомендуется: --vfs vfs/deep.zip
+# --- whoami ---
+whoami
+whoami лишний_аргумент
+# --- ls: без аргументов, с путём, несколько путей, -l, -a ---
+ls
+ls /home/user
+ls -a /home/user
+ls -l /home/user/docs
+ls -la /home/user/docs/archive
+ls /etc /var /tmp
+ls /etc/motd /var
+ls -z
+ls /нет/такого
+ls /etc/motd/файл
+# --- cd: абсолютный, относительный, .., без аргумента, ошибки ---
+cd /home/user/docs
+cd archive/2024
+cd ../../..
+cd /etc/motd
+cd /нет/такого
+cd a b
+cd
+cd ~
+cd /home/user/pictures
+# --- cat: файл, несколько, -n, пустой, каталог, двоичный, ошибки ---
+cat /etc/motd
+cat -n /var/log/system.log
+cat /etc/hostname /etc/motd
+cat logo.png
+cat /home
+cat /нет/такого
+cat
+cat /etc/hostname /нет/такого /etc/motd
+# --- парсер: кавычки и экранирование ---
+cd "/home/user/docs"
+cat "report.txt"
+cat 'report.txt'
+cat re\port.txt
+cat "report.txt
+cd ""
